@@ -58,6 +58,21 @@ function findA(e, smallestR) {
     return a
 }
 
+function giveVertices(e, smallestR, h, mu) {
+    result = []
+    let farAngle = PI - (acos(1 / e)) - 0.01
+    for (let th = farAngle; th > -farAngle; th -= 0.05) {
+        let farR = sq(h) / (mu * (1 + e * cos(th)))
+        let vertex = new Vector(farR, th)
+        let [x, y] = [vertex.x, vertex.y]
+        result.push([x, y])
+    }
+    let farR = sq(h) / (mu * (1 + e * cos(-farAngle)))
+    let bottomVertex = new Vector(farR, -farAngle)
+    result.push([bottomVertex.x, bottomVertex.y])
+    return result
+}
+
 // calculate semi-minor axis, b, from eccentricity and semi-major axis
 function semiMinorAxis(e, a) {
     if (e >= 1) {
