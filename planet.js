@@ -1,6 +1,6 @@
 let planet = {
     r: new Vector(1.47e11, Math.PI),
-    v: new Vector(2.029e4, -PI/2),
+    v: new Vector(2.029e4, Math.PI/2),
     w: 0.001,
     width: 20 * 1.5e9,
     draw() {
@@ -28,7 +28,7 @@ let planet = {
         noFill()
         stroke(0, 0, 100)
         strokeWeight(1.5e9)
-        ellipse(this.f, 0, this.a * 2, this.b * 2)
+        ellipse(-this.f, 0, this.a * 2, this.b * 2)
         rotate(this.th + this.r.th())
     }
 }

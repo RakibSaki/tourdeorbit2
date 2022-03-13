@@ -1,4 +1,4 @@
-let [PI, TAU, sqrt, sq, cos, sin, tan, acos, asin, atan] = [Math.PI, Math.TAU, Math.sqrt, x=>x*x, Math.cos, Math.sin, Math.tan, x => Math.acos(adjustTrig(x)), x => Math.asin(adjustTrig(x)), Math.atan]
+let [PI, TAU, sqrt, sq, cos, sin, tan, acos, asin, atan] = [Math.PI, Math.PI * 2, Math.sqrt, x=>x*x, Math.cos, Math.sin, Math.tan, x => Math.acos(adjustTrig(x)), x => Math.asin(adjustTrig(x)), Math.atan]
 
 class Vector extends p5.Vector {
     constructor (distance, angle) {
@@ -13,9 +13,9 @@ class Vector extends p5.Vector {
 }
 
 function adjustTrig(trig) {
-    if (1 < trig < 1.01) {
+    if (1 < trig && trig < 1.01) {
         return 1
-    } else if (-1.01 < trig < -1) {
+    } else if (-1.01 < trig && trig < -1) {
         return -1
     } else {
         return trig

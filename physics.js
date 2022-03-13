@@ -22,7 +22,7 @@ function angleElapsed(r, v, h, e, mu) {
         th = TAU - th
     }
     if (!th) {
-        console.log(ecthp1, c, r.dot(v))
+        console.log(ecthp1, c, r.dot(v), th)
     }
     return th
 }
