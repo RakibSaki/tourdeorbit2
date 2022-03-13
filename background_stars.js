@@ -1,4 +1,4 @@
-backgroundStars = {
+let backgroundStars = {
     "positions": [],    // vectors
     "widths": [],       // strokeWeights
     "hues": [],         // hue of color
