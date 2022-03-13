@@ -21,3 +21,6 @@ function adjustTrig(trig) {
         return trig
     }
 }
+
+let zoom = 1 / 1.5e9    // so that 100 pixels is 1.00 au
+let userZoom = 1        // zoom by user by clicking buttons

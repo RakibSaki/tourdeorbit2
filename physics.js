@@ -36,6 +36,28 @@ function semiMajorAxis(E, mu) {
     return -mu / (2 * E)
 }
 
+// find distance when planet is closest
+// from eccentricity, MAGNITUDE of angular velocity and mu for the particular star
+function smallestR(e, h, mu) {
+    return h * h / (mu * (1 + e))   // smallest value of r occurs when theta is 0
+}
+
+// for parabolic or hyperbolic orbits, calculate the value of a
+// from eccentricity and smallest value of r
+function findA(e, smallestR) {
+    if (e < 1) {
+        console.log("Orbit is elliptic; try to calculate semi-major axis instead")
+        return null
+    }
+    if (e == 1) {
+        console.log("Orbit is parabolic; a is not relevant")
+        return null
+    }
+    let aem1 = smallestR        // smallest value of r is ae - a = a(e-1)
+    let a = aem1 / (e-1)
+    return a
+}
+
 // calculate semi-minor axis, b, from eccentricity and semi-major axis
 function semiMinorAxis(e, a) {
     if (e >= 1) {

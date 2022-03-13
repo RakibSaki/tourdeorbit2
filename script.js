@@ -14,8 +14,8 @@ function draw() {
     scale(userZoom)
     backgroundStars.draw()
     scale(zoom)         // make astronomical lengths fit to screen
-    star.draw()
     planet.draw()
+    star.draw()
     planet.move()
 }
 
