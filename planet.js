@@ -26,7 +26,6 @@ let planet = {
             this.b = semiMinorAxis(this.e, this.a)
         } else {
             this.a = findA(this.e, this.smallestR)
-            this.vertices = giveVertices(this.e, this.smallestR, this.h.mag(), star.mu)
         }
         this.f = this.a * this.e
     },
@@ -56,24 +55,11 @@ let planet = {
             let toDirectrix = this.smallestR * (1 + (1 / this.e))
             line(toDirectrix, -2 * width / (zoom * userZoom), toDirectrix, 2 * width / (zoom * userZoom))
             stroke(0, 0, 100, 90)
-            let farAngle = PI - (acos(1 / this.e)) - 0.01
-            console.log('farAngle', farAngle)
-            let farR = sq(this.h.mag()) / (star.mu * (1 + this.e * cos(farAngle)))
-            let topVertex = new Vector(farR, farAngle)
-            let bottomVertex = new Vector(farR, -farAngle)
             // path
-            // beginShape()
-            // vertex(topVertex.x, topVertex.y)
-            // // quadraticVertex(-this.f, 0, bottomVertex.x, bottomVertex.y)
-            // vertex(this.smallestR,0)
-            // vertex(bottomVertex.x, bottomVertex.y)
-            // endShape()
-            noFill();
-            beginShape();
-            for (vert of this.vertices) {
-                curveVertex(vert[0], vert[1])
+            for (let point of this.pathPoints) {
+                // circle(point[0], point[1], this.width / 3)
+                circle(point[0], point[1], this.width / 10)
             }
-            endShape()
         }
         rotate(this.th + this.r.th())
     }

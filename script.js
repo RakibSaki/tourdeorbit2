@@ -1,6 +1,7 @@
 function setup() {
     createCanvas(windowWidth, windowHeight)
     populateBackgroundStars(width, height)
+    calculateHyperbolic()
     colorMode(HSB, 360, 100, 100, 100)
 }
 
@@ -17,9 +18,15 @@ function draw() {
     planet.draw()
     star.draw()
     planet.move()
+    calculateHyperbolic()
 }
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
     populateBackgroundStars(width, height)
+    calculateHyperbolic()
+}
+
+function calculateHyperbolic() {
+    calculateHyperbolicPath(planet, sqrt(sq(width) + sq(height)), zoom * userZoom, star.mu)
 }

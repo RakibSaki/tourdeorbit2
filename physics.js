@@ -15,16 +15,23 @@ function isElliptic(e) {
 // from VECTOR distance between planet and sun, velocity of planet, MAGNITUDE of angular momentum of planet
 // eccentricity and mu for the particular star
 function angleElapsed(r, v, h, e, mu) {
-    let ecthp1 = h * h / (r.mag() * mu)       // this 1 + e.cos(th)
-    let c = (ecthp1 - 1) / e        // this is cos(th)
-    let th = acos(c)        // so this is th
+    let th = thFromR(r.mag(), e, h, mu)
     if (r.dot(v) > 0) {
         th = TAU - th
     }
-    if (!th) {
-        console.log(ecthp1, c, r.dot(v), th)
-    }
     return th
+}
+
+// give r from th
+function rFromTh(th, e, h, mu) {
+    return h * h / (mu * (1 + (e * cos(th))))
+}
+
+// give th from r
+function thFromR(r, e, h, mu) {
+    let ecthp1 = h * h / (r * mu)       // this 1 + e.cos(th)
+    let c = (ecthp1 - 1) / e        // this is cos(th)
+    return acos(c)        // so this is th
 }
 
 // calculate semi-major axis, a, from energy or planet and mu for the particular star
@@ -39,7 +46,7 @@ function semiMajorAxis(E, mu) {
 // find distance when planet is closest
 // from eccentricity, MAGNITUDE of angular velocity and mu for the particular star
 function smallestR(e, h, mu) {
-    return h * h / (mu * (1 + e))   // smallest value of r occurs when theta is 0
+    return rFromTh(0, e, h, mu)   // smallest value of r occurs when theta is 0
 }
 
 // for parabolic or hyperbolic orbits, calculate the value of a
@@ -54,23 +61,12 @@ function findA(e, smallestR) {
         return null
     }
     let aem1 = smallestR        // smallest value of r is ae - a = a(e-1)
-    let a = aem1 / (e-1)
+    let a = aem1 / (e - 1)
     return a
 }
 
-function giveVertices(e, smallestR, h, mu) {
-    result = []
-    let farAngle = PI - (acos(1 / e)) - 0.01
-    for (let th = farAngle; th > -farAngle; th -= 0.05) {
-        let farR = sq(h) / (mu * (1 + e * cos(th)))
-        let vertex = new Vector(farR, th)
-        let [x, y] = [vertex.x, vertex.y]
-        result.push([x, y])
-    }
-    let farR = sq(h) / (mu * (1 + e * cos(-farAngle)))
-    let bottomVertex = new Vector(farR, -farAngle)
-    result.push([bottomVertex.x, bottomVertex.y])
-    return result
+function giveVertices(e, h, mu) {
+
 }
 
 // calculate semi-minor axis, b, from eccentricity and semi-major axis
@@ -79,7 +75,7 @@ function semiMinorAxis(e, a) {
         console.log("Orbit is not elliptic; can not calculate semi-minor axis")
         return null
     }
-    return sqrt(sq(a) - sq(e*a))
+    return sqrt(sq(a) - sq(e * a))
 }
 
 // calculate total specific energy from  distance and speed of planet and mu for the particular star
@@ -89,4 +85,29 @@ function totalSpecificEnergy(r, v, mu) {
 
 function angularMomentum(r, v) {
     return r.cross(v)
+}
+
+// calculate path of hyperbolic or parabolic orbit from
+// maximum dimension of screen - width or height
+// zooming from meters to pixels
+// and mu for the particular star
+function calculateHyperbolicPath(planet, maxVisible, zoom, mu) {
+    // do nothing if orbit is not hyperbolic or parabolic
+    if (isElliptic(planet.e)) {
+        return
+    }
+    planet.pathPoints = []
+    // maximum visible distance
+    let farR = maxVisible / zoom
+    let h = planet.h.mag()  // since about to use h.mag() so many times
+    // path is not visibl if closest distance between planet and sun is greater than maximum visible distance
+    if (farR < smallestR(planet.e, h, mu)) {
+        return
+    }
+    let farAngle = thFromR(farR, planet.e, h, mu)
+    for (let [th, i] = [farAngle, 0]; i <= 100; [th, i] = [th - (farAngle / 50), i+1]) {
+        let r = rFromTh(th, planet.e, h, mu)
+        let point = new Vector(r, th)
+        planet.pathPoints.push([point.x, point.y])
+    }
 }
