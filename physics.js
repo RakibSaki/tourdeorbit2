@@ -18,11 +18,9 @@ function angleElapsed(r, v, h, e, mu) {
     let th = thFromR(r.mag(), e, h.mag(), mu)
     if (r.dot(v) > 0) {
         th = TAU - th
-        console.log('planet is moving away')
     }
     if (h.z > 0) {
         th = TAU - th
-        console.log('rotating anti-clockwise')
     }
     return th
 }
@@ -111,4 +109,34 @@ function calculateHyperbolicPath(planet, maxVisible, zoom, mu) {
         let point = new Vector(r, th)
         planet.pathPoints.push([point.x, point.y])
     }
+}
+
+// calculate new angle from old angle and time elapsed
+// old angle, time of flight, period, eccentricity, angular velocity
+function moveAngle(th0, tof, T, e, w) {
+    let cosu0 = (e + cos(th0)) / (1 + (e * cos(th0)))
+    let sinu0 = sqrt(1 - sq(cosu0))
+    let u0 = acos(cosu0)
+    let M0 = u0 - (e * sinu0)
+    let delM = tof * TAU / T
+    let M = delM + M0
+    let u = iterativelyCalculateU(M, e)
+    let cosu = cos(u)
+    let oneminusecosucosth = cosu - e   // this is (1-e.cos_u)cos_th
+    let costh = oneminusecosucosth / (1 - (e * cosu))
+    let th = acos(costh)
+    console.log(th)
+    // let estimatedth = (th0 + (tof * w)) % TAU
+    // if (abs(th - estimatedth) > abs(TAU - th) - estimatedth) {
+    //     th = TAU - th
+    // }
+    return th
+}
+
+function iterativelyCalculateU(M, e) {
+    let [u, u1] = [0, 0.0001]
+    while (abs(u - u1) >= 0.0001) {
+        [u, u1] = [u1, M + (e * sin(u1))]
+    }
+    return u1
 }
