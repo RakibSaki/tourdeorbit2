@@ -15,9 +15,14 @@ function isElliptic(e) {
 // from VECTOR distance between planet and sun, velocity of planet, MAGNITUDE of angular momentum of planet
 // eccentricity and mu for the particular star
 function angleElapsed(r, v, h, e, mu) {
-    let th = thFromR(r.mag(), e, h, mu)
+    let th = thFromR(r.mag(), e, h.mag(), mu)
     if (r.dot(v) > 0) {
         th = TAU - th
+        console.log('planet is moving away')
+    }
+    if (h.z > 0) {
+        th = TAU - th
+        console.log('rotating anti-clockwise')
     }
     return th
 }
@@ -63,10 +68,6 @@ function findA(e, smallestR) {
     let aem1 = smallestR        // smallest value of r is ae - a = a(e-1)
     let a = aem1 / (e - 1)
     return a
-}
-
-function giveVertices(e, h, mu) {
-
 }
 
 // calculate semi-minor axis, b, from eccentricity and semi-major axis

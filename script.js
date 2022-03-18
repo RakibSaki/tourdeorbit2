@@ -16,6 +16,7 @@ function draw() {
     backgroundStars.draw()
     scale(zoom)         // make astronomical lengths fit to screen
     planet.draw()
+    planet.drawVelocityDirection()
     star.draw()
     planet.move()
     calculateHyperbolic()
